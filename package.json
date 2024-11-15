@@ -1,0 +1,26 @@
+{
+  "name": "ia_zapzap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+   "type":"module",
+  "scripts": {
+    "start": "nodemon dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
+    "@wppconnect-team/wppconnect": "^1.32.4",
+    "axios": "^1.7.2",
+    "compressorjs": "^1.2.1",
+    "dotenv": "^16.4.5",
+    "eventemitter2": "^6.4.9",
+    "express": "^4.19.2",
+    "googleapis": "^105.0.0",
+    "http-server": "^14.1.1",
+    "typescript": "^5.5.4"
+  }
+  
+}
