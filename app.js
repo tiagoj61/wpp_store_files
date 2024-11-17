@@ -1,8 +1,6 @@
 import * as wppconnect from '@wppconnect-team/wppconnect';
 import dotenv from 'dotenv';
 
-import processReceivedMessage from "./src/receiveMessage.js";
-
 dotenv.config();
 
 console.log("\x1b[32m [Starting] - \x1b[0m", "Application with ENV: " + process.env.LCL)
@@ -40,6 +38,17 @@ wppconnect
 
 async function start(client) {
   
-  client.getUnreadMessages(true,true,true).then(a=>console.log(a))
- 
+  client.getUnreadMessages(true,true,true).then(a=>{
+    console.log(a)
+    console.log(a.groupMetadata.id)
+    }
+  )
+  client.getMessages(process.env.chatId,{
+    count: 1,
+    fromMe: true
+}).then(a=>console.log(a))
+//a[0].id
+//client.downloadMedia(a[0].id).then(a=>console.log(a))
+//download from 64
+//caption: testew
 }
