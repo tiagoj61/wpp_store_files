@@ -1,6 +1,6 @@
 import * as wppconnect from '@wppconnect-team/wppconnect';
 import dotenv from 'dotenv';
-
+import fs from 'fs';
 dotenv.config();
 
 console.log("\x1b[32m [Starting] - \x1b[0m", "Application with ENV: " + process.env.LCL)
@@ -37,18 +37,24 @@ wppconnect
   .catch((error) => console.log(error));
 
 async function start(client) {
-  
-  client.getUnreadMessages(true,true,true).then(a=>{
+
+  client.getUnreadMessages(true, true, true).then(a => {
     console.log(a)
     console.log(a.groupMetadata.id)
-    }
+  }
   )
-  client.getMessages(process.env.chatId,{
-    count: 1,
+  client.getMessages(process.env.chatId, {
+    count: 3,
     fromMe: true
-}).then(a=>console.log(a))
-//a[0].id
-//client.downloadMedia(a[0].id).then(a=>console.log(a))
-//download from 64
-//caption: testew
+  }).then(message => {
+    console.log(message)
+    if (message.caption.includes('/')) {
+      client.downloadMedia(message[0].id).then(deownloaded => {
+        let base64Image = deownloaded.split(';base64,').pop();
+        fs.writeFile(message.caption + 'image.png', base64Image, { encoding: 'base64' }, function (err) {
+          console.log('File created');
+        });
+      })
+    }
+  })
 }
