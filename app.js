@@ -38,20 +38,20 @@ wppconnect
 
 async function start(client) {
 
-  client.getUnreadMessages(true, true, true).then(a => {
-    console.log(a)
-    console.log(a.groupMetadata.id)
-  }
-  )
   client.getMessages(process.env.chatId, {
-    count: 3,
+    count: 1,
     fromMe: true
   }).then(message => {
     console.log(message)
-    if (message.caption.includes('/')) {
+    console.log(message[0].caption)
+    if (message[0].caption.includes('/')) {
       client.downloadMedia(message[0].id).then(deownloaded => {
         let base64Image = deownloaded.split(';base64,').pop();
-        fs.writeFile(message.caption + 'image.png', base64Image, { encoding: 'base64' }, function (err) {
+        const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+const d = new Date();
+let name = month[d.getMonth()];
+        fs.writeFile(name+".png" , base64Image, { encoding: 'base64' }, function (err) {
           console.log('File created');
         });
       })
