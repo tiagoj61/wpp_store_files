@@ -54,6 +54,9 @@ let name = month[d.getMonth()];
         fs.writeFile(name+".png" , base64Image, { encoding: 'base64' }, function (err) {
           console.log('File created');
         });
+        // see if its from current month
+        // see if its residencial,aluguel, luz
+          // move to current folder
       })
     }
   })
