@@ -1,8 +1,9 @@
 import * as wppconnect from '@wppconnect-team/wppconnect';
 import dotenv from 'dotenv';
-import fs from 'fs';
+import fs from 'fs-extra';
 dotenv.config();
-
+const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const keyMessages = ['residencial','aluguel','luz']
 console.log("\x1b[32m [Starting] - \x1b[0m", "Application with ENV: " + process.env.LCL)
 
 wppconnect
@@ -38,25 +39,23 @@ wppconnect
 
 async function start(client) {
 
-  client.getMessages(process.env.chatId, {
+  client.getMessages(process.env.id, {
     count: 1,
     fromMe: true
   }).then(message => {
-    console.log(message)
-    console.log(message[0].caption)
-    if (message[0].caption.includes('/')) {
-      client.downloadMedia(message[0].id).then(deownloaded => {
-        let base64Image = deownloaded.split(';base64,').pop();
-        const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-
-const d = new Date();
-let name = month[d.getMonth()];
-        fs.writeFile(name+".png" , base64Image, { encoding: 'base64' }, function (err) {
-          console.log('File created');
-        });
-        // see if its from current month
-        // see if its residencial,aluguel, luz
-          // move to current folder
+    let currentMessage = message[0]
+    
+  //loop on varius messages
+    let messageMonth = new Date(currentMessage.timestamp*1000).getMonth();
+    const now = new Date();
+    
+    if (messageMonth==now.getMonth() && keyMessages.includes(currentMessage.caption)) {
+      client.downloadMedia(currentMessage.id).then(downloaded => {
+        let base64Image = downloaded.split(';base64,').pop();
+        let name = month[now.getMonth()];
+        fs.writeFile(name + ".png", base64Image, { encoding: 'base64' }, function (err) {});
+        fs.move(name + ".png", '/home/pc/Documentos/Comprovantes/'+currentMessage.caption+'/'+name + ".png", function (err) { if (err) return console.error(err)
+          console.log("success!")})
       })
     }
   })
