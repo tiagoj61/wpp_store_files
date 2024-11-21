@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import fs from 'fs-extra';
 dotenv.config();
 const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const keyMessages = ['residencial','aluguel','luz']
+const keyMessages = ['residencial', 'aluguel', 'luz']
 console.log("\x1b[32m [Starting] - \x1b[0m", "Application with ENV: " + process.env.LCL)
 
 wppconnect
@@ -40,23 +40,24 @@ wppconnect
 async function start(client) {
 
   client.getMessages(process.env.id, {
-    count: 1,
+    count: 10,
     fromMe: true
   }).then(message => {
-    let currentMessage = message[0]
+    message.forEach((currentMessage) => {
     
-  //loop on varius messages
-    let messageMonth = new Date(currentMessage.timestamp*1000).getMonth();
-    const now = new Date();
-    
-    if (messageMonth==now.getMonth() && keyMessages.includes(currentMessage.caption)) {
-      client.downloadMedia(currentMessage.id).then(downloaded => {
-        let base64Image = downloaded.split(';base64,').pop();
-        let name = month[now.getMonth()];
-        fs.writeFile(name + ".png", base64Image, { encoding: 'base64' }, function (err) {});
-        fs.move(name + ".png", '/home/pc/Documentos/Comprovantes/'+currentMessage.caption+'/'+name + ".png", function (err) { if (err) return console.error(err)
-          console.log("success!")})
-      })
-    }
+      let messageMonth = new Date(currentMessage.timestamp * 1000).getMonth();
+      const currentMonth = new Date().getMonth();
+
+      if (messageMonth == currentMonth.getMonth() && keyMessages.includes(currentMessage.caption)) {
+        client.downloadMedia(currentMessage.id).then(downloaded => {
+          let base64Image = downloaded.split(';base64,').pop();
+          let name = month[currentMonth.getMonth()];
+          
+          fs.writeFile(name + ".png", base64Image, { encoding: 'base64' }, function (err) { });
+          fs.move(name + ".png", '/home/pc/Documentos/Comprovantes/' + currentMessage.caption + '/' + name + ".png", function (err) {})
+
+        })
+      }
+    });
   })
 }
