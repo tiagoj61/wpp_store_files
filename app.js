@@ -44,14 +44,14 @@ async function start(client) {
     fromMe: true
   }).then(message => {
     message.forEach((currentMessage) => {
-    
+      console.log(currentMessage.caption)
       let messageMonth = new Date(currentMessage.timestamp * 1000).getMonth();
       const currentMonth = new Date().getMonth();
 
-      if (messageMonth == currentMonth.getMonth() && keyMessages.includes(currentMessage.caption)) {
+      if (messageMonth == currentMonth && keyMessages.includes(currentMessage.caption)) {
         client.downloadMedia(currentMessage.id).then(downloaded => {
           let base64Image = downloaded.split(';base64,').pop();
-          let name = month[currentMonth.getMonth()];
+          let name = month[currentMonth];
           
           fs.writeFile(name + ".png", base64Image, { encoding: 'base64' }, function (err) { });
           fs.move(name + ".png", '/home/pc/Documentos/Comprovantes/' + currentMessage.caption + '/' + name + ".png", function (err) {})
